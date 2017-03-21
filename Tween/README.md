@@ -1,25 +1,17 @@
-Tween.js
-================
+Tween 动画函数封装
+---------
 
-简介
-----------------
+1、理解在时间范围内位置的变化
 
-各类缓动算法，效果演示参见：http://www.zhangxinxu.com/study/201612/how-to-use-tween-js.html
+> 即 CSS 中的 animation-timing-function ，可以理解为通过函数 y = f(x) 得出的 y 的变化曲线。
 
-如何使用参见：http://www.zhangxinxu.com/wordpress/?p=5828
+2、写一个能够执行数学函数的通用的 js 动画函数
 
-其中animation.js是新增，为了更简单的使用这些缓动算法，语法如下：
+3、优化：能够同时执行多个动画，每个动画执行不同的数学函数
 
-<pre>Math.animation(form, to, duration, easing, callback);</pre>
+4、优化：能够传入自定义时间函数，或者自定义如三阶贝塞尔曲线的参考点来执行动画
 
-其中：
-<ul>
-	<li><code>form</code>和<code>to</code>是必须参数，表示动画起始数值和结束数值；</li>
-	<li><code>duration</code>，<code>easing</code>，<code>callback</code>理论上都是可选参数，但是实际上<code>callback</code>肯定是要使用的，因为实时变化的数值就是通过<code>callback</code>返回的。然后，<code>duration</code>，<code>easing</code>，<code>callback</code>这3个参数的顺序是任意的。具体来讲：
-<ul>
-	<li><code>duration</code>为动画持续时间，默认<code>300</code>，默认单位是毫秒，建议使用数值，例如<code>600</code>，也支持带单位，例如<code>600ms</code>或者<code>0.6s</code>；</li>
-	<li><code>easing</code>为缓动的类型，字符串类型，源自Tween.js。例如：<code>'Linear'</code>，<code>'Quad.easeIn'</code>，<code>'Bounce.easeInOut'</code>等等，需要注意大小写。 其中，默认值是<code>'Linear'</code>；</li>
-	<li><code>callback</code>为回调函数，支持2个参数（value, isEnding），其中<code>value</code>表示实时变化的计算值，<code>isEnding</code>是布尔值，表示动画是否完全停止。</li>
-</ul>
-</li>
-</ul>
+参考
+
+* [GreenSock-TweenMax]()
+* [张鑫旭](http://www.zhangxinxu.com/wordpress/2013/09/css3-animation-requestanimationframe-tween-%E5%8A%A8%E7%94%BB%E7%AE%97%E6%B3%95/)
