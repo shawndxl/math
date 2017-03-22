@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tween应用</title>
+</head>
+<body>
+<canvas style="border: 1px solid #ccc;"></canvas>
+</body>
+
+<script src='js/tween.js'></script>
+<script>
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
+canvas.width = 300;
+canvas.height = 300;
+
+var begin = Date.now();
+var duration = 2;
+
+var canvasDraw = function(x, y) {
+	ctx.beginPath();
+    ctx.arc(x, y, 1, 0, Math.PI * 2);
+    ctx.fillStyle = 'red';
+    ctx.fill();
+}
+
+for (var i = 0; i < 300; i++) {
+	var x = i;
+	var y = Tween.Cubic.easeIn(x, 0, 300, 300);
+	canvasDraw(x, y);
+}
+</script>
+
+</html>

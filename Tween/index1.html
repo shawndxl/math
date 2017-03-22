@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tween应用</title>
+</head>
+<body>
+<canvas style="border: 1px solid;"></canvas>
+</body>
+
+<script src='js/tween.js'></script>
+<script>
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
+
+var begin = Date.now();
+var duration = 2;
+
+var render = function() {
+	if ((Date.now() - begin) / 1000 > duration) return;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	ctx.fillStyle = 'red';
+
+    var x = Tween.Bounce.easeOut((Date.now() - begin) / 1000, 0, canvas.width - 10, duration);
+    ctx.fillRect(x, 0, 10, 10);
+
+	requestAnimationFrame(render);
+}
+
+render();
+</script>
+
+</html>

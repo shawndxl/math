@@ -1,161 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-    <style type="text/css">
-        body {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-    }
-    .cubic_bezier {
-      position: absolute;
-      width: 400px;
-      height: 300px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0;
-      margin: auto;
-      border-bottom: 1px solid #999;
-      border-left: 1px solid #999; 
-    }
-    span {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      margin-left: -3px;
-      margin-top: -3px;
-      background: red;
-      border-radius: 100%; 
-    }
-    </style>
+	<title>时间函数</title>
 </head>
 <body>
-<div class="cubic_bezier"></div>
+<canvas style="border: 1px solid;"></canvas>
 </body>
+
+<script src='js/tween.js'></script>
+<script src='js/animation.js'></script>
 <script>
-var Bx = .62,
-    By = 0.76,
-    Cx = 1,
-    Cy = -0.19;
-//.62,-0.76,1,-0.19
-//var finalPosition={}, endPosition = {};
-var lengthX = 400; // 曲线是按照 0，0，1，1的坐标来计算的，返回结果 * 自己的X轴的长度既是 x 轴的值，这个值是作为输入，求出 y 值的
-var lengthY = 300; // y 轴的长度，求出 当 t 时 f（t）的值，然后（1-t）* y 的长度，既得到y轴的值
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
 
-function loop(t){
-    //var t = (now - animationStartTime) / ( animationDuration*1000 );
-    //var t = 3 / 5;
+var draw = function() {
+    var value = arguments[0] || 1;
+    var end = arguments[1];
 
-    var curve = new UnitBezier(Bx, By, Cx, Cy);
-
-    // console.log(UnitBezier.prototype.epsilon);
-    // console.log(curve.epsilon)
-    // return;
-    var t1 = curve.solve(t, curve.epsilon); // 参数 1 为时间，既x轴，参数2为精度，使用默认即可，如果了解可以更改(1e-4)之类的精度值
-    //var s1 = 1.0 - t1;
-    //console.log(t+':'+t1)
-    $('.cubic_bezier').append('<span style="left:' + t * lengthX + 'px;top:' + (1 - t1) * lengthY + 'px;"></span>')
-    // Lerp using solved T
-    //finalPosition.x = (startPosition.x * s1) + (endPosition.x * t1);
-    //finalPosition.y = (startPosition.y * s1) + (endPosition.y * t1);
-}
-
-
-/**
-* Solver for cubic bezier curve with implicit control points at (0,0) and (1.0, 1.0)
-*/
-function UnitBezier(p1x, p1y, p2x, p2y) {
-    // pre-calculate the polynomial coefficients
-    // First and last control points are implied to be (0,0) and (1.0, 1.0)
-    this.cx = 3.0 * p1x;
-    this.bx = 3.0 * (p2x - p1x) - this.cx;
-    this.ax = 1.0 - this.cx -this.bx;
-
-    this.cy = 3.0 * p1y;
-    this.by = 3.0 * (p2y - p1y) - this.cy;
-    this.ay = 1.0 - this.cy - this.by;
-}
-
-UnitBezier.prototype.epsilon = 1e-6; // Precision 精度
-//console.log(2e-6);
-UnitBezier.prototype.sampleCurveX = function(t) {
-    return ((this.ax * t + this.bx) * t + this.cx) * t;
-}
-UnitBezier.prototype.sampleCurveY = function (t) {
-    return ((this.ay * t + this.by) * t + this.cy) * t;
-}
-UnitBezier.prototype.sampleCurveDerivativeX = function (t) {
-    return (3.0 * this.ax * t + 2.0 * this.bx) * t + this.cx;
-}
-UnitBezier.prototype.solveCurveX = function (x, epsilon) {
-    var t0; 
-    var t1;
-    var t2;
-    var x2;
-    var d2;
-    var i;
-
-    // First try a few iterations of Newton's method -- normally very fast.
-    for (t2 = x, i = 0; i < 8; i++) {
-        x2 = this.sampleCurveX(t2) - x;
-        if (Math.abs (x2) < epsilon)
-            return t2;
-        d2 = this.sampleCurveDerivativeX(t2);
-        if (Math.abs(d2) < epsilon)
-            break;
-        t2 = t2 - x2 / d2;
+    if (end) {
+        console.log('This animation is over');
     }
 
-    // No solution found - use bi-section
-    t0 = 0.0;
-    t1 = 1.0;
-    t2 = x;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(value, 0, 20, 10);
+};
 
-    if (t2 < t0) return t0;
-    if (t2 > t1) return t1;
-
-    while (t0 < t1) {
-        x2 = this.sampleCurveX(t2);
-        if (Math.abs(x2 - x) < epsilon)
-            return t2;
-        if (x > x2) t0 = t2;
-        else t1 = t2;
-
-        t2 = (t1 - t0) * .5 + t0;
-    }
-
-    // Give up
-    return t2;
-}
-// Find new T as a function of Y along curve X
-UnitBezier.prototype.solve = function (x, epsilon) {
-    return this.sampleCurveY( this.solveCurveX(x, epsilon) );
-}
-
-loop(0/20);
-loop(1/20);
-loop(2/20);
-loop(3/20);
-loop(4/20);
-loop(5/20);
-loop(6/20);
-loop(7/20);
-loop(8/20);
-loop(9/20);
-loop(10/20);
-loop(11/20);
-loop(12/20);
-loop(13/20);
-loop(14/20);
-loop(15/20);
-loop(16/20);
-loop(17/20);
-loop(18/20);
-loop(19/20);
-loop(20/20);
+mathAnimation(0, canvas.width - 20, 2, draw, Tween.Bounce.easeOut);
 </script>
 </html>
