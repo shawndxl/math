@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tween曲线</title>
+</head>
+<body>
+<h3>注意坐标原点在左上角</h3>
+</body>
+
+<script src='js/tween.js'></script>
+<script>
+var Tween = window.Tween;
+
+Object.keys(Tween).forEach(function(item) {
+	console.log(typeof Tween[item]);
+	if (typeof Tween[item] === 'function') {
+		createCanvas(Tween[item], item);
+	} else {
+		Object.keys(Tween[item]).forEach(function(subItem) {
+			createCanvas(Tween[item][subItem], item + '.' + subItem);
+		})
+	}
+})
+
+function createCanvas(mathFn, str) {
+	var p = document.createElement('p');
+	p.innerText = 'Tween.' + str;
+	document.body.appendChild(p);
+	var canvas = document.createElement('canvas');
+	canvas.width = 300;
+	canvas.height = 300;
+	canvas.style.border = '1px solid #ccc';
+	document.body.appendChild(canvas);
+
+	var ctx = canvas.getContext('2d');
+	ctx.fillStyle = 'red';
+
+	var length = 200;
+	var originX = 50;
+	var originY = 50;
+
+	drawOther(ctx, originX, originY, length)
+
+	for (var i = 0; i < length; i++) {
+		ctx.beginPath();
+		var x = i + originX;
+		var y = mathFn(x - originX, originY, length, length); // 注意此处传递进入的第一个参数跟下方的arc使用的参数x的值是不一样的
+		ctx.arc(x, y, 1, 0, Math.PI * 2);
+		ctx.fill();
+	}
+}
+
+function drawOther(ctx, x, y, length) {
+	var text = '0,0';
+	ctx.font = '15px Arial';
+	ctx.fillText(text, x - (ctx.measureText(text).width), y);
+	ctx.fillText('x', x + length + 5, y);
+	ctx.fillText('y', x - 10, y + length);
+	ctx.beginPath();
+	ctx.strokeStyle = 'blue';
+	ctx.strokeRect(x, y, length, length);
+}
+</script>
+</html>
