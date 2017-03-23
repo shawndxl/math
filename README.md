@@ -80,12 +80,10 @@ function getCirclePoint(center, distance, angle) {
 }
 ```
 
+## 函数[查看详细](Tween/README.md)
+
 * 匀速运动
-
 * 匀加速运动
-
-[查看详细说明](Tween/README.md)
-
 * 二阶贝塞尔曲线
 
 > 我们可以发现二阶贝塞尔曲线的 easeIn 跟 匀加速运动一致，为什么呢？

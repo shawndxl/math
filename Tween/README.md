@@ -50,7 +50,7 @@ function yunjiasu(t, b, c, d) {
 
 > 首先从曲线上我们可以发现匀加速运动的曲线跟二阶贝塞尔曲线 easeIn的曲线一模一样，通过精简上方匀加速函数，可以发现公式其实是一样的
 
-> [查看所有的Tween函数曲线](index4.html)
+> [查看所有的Tween函数曲线](index4.html) 或者 [see it on Codepen](http://codepen.io/dongxl/pen/MpGEZY)
 
 3、优化：能够同时执行多个动画，每个动画执行不同的数学函数
 
@@ -61,5 +61,4 @@ function yunjiasu(t, b, c, d) {
 
 参考
 
-* [GreenSock-TweenMax]()
 * [张鑫旭](http://www.zhangxinxu.com/wordpress/2013/09/css3-animation-requestanimationframe-tween-%E5%8A%A8%E7%94%BB%E7%AE%97%E6%B3%95/)
