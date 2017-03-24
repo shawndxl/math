@@ -31,10 +31,10 @@
             var cur = (Date.now() - start) / 1000;
             var value = mathFn(cur, from, to - from, during); // Tween中需求的第三个参数是变化的量，而非终点值
             if (cur <= during) {
-                animateFn(value)
+                animateFn(value, cur)
                 requestAnimationFrame(_step);
             } else {
-                animateFn(to, true);
+                animateFn(to, cur, true);
             }
         }
         _step();
