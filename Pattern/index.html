@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>求圆上某一点的坐标</title>
+  <style type="text/css">
+  * {
+    margin: 0;
+  }
+  html, body {
+      height: 100%;
+    }
+    span {
+      width: 10px;
+      height: 10px;
+      background: blue;
+      position: absolute;
+    }
+  #person {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    background: red;
+  }
+  </style>
+</head>
+<body>
+<div id='person'></div>
+</body>
+<script src='bower_components/jquery/dist/jquery.js'></script>
+<script>
+/*
+ * 1、求圆上某一点的坐标
+ * 须知： 圆心坐标，半径，改点所在的角度或者弧度
+ * 角度 -180 到 180 从水平右侧为0 顺时针为正数，逆时针为负数 // 上-90 下 90 右0 左0
+ */
+var centerX = $('#person').css('left');
+var centerY = $('#person').css('top');
+var center = [centerX.slice(0, -2), centerY.slice(0, -2)];
+var space = 100;
+
+function getCirclePoint(center, space, angle) {
+  var radian = 2 * Math.PI / 360 * angle; // 弧度
+  var radian = angle / 180 * Math.PI;
+
+  var x1 = Number(center[0]) + Math.cos(radian) * space;
+  var y1 = Number(center[1]) + Math.sin(radian) * space;
+
+  return [x1.toFixed(1), y1.toFixed(1)];
+}
+// Math.cos(radian) = (x1 - center[0]) / space
+// radian = Math.acos((x1 - center[0]) / space) 弧度-角度
+// radian = Math.acos((526 - 426) / 100)
+// angle = radian * 180 / Math.PI
+// angle = Math.acos((x1 - center.x) / space) * 180 / Math.PI
+
+// 两点之间距离 Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2))
+
+$('body').click(function(e) {
+  console.log(e.pageX, e.pageY)
+  var span = document.createElement('span')
+
+  // span.style.left = e.pageX + 'px';
+  // span.style.top = e.pageY + 'px';
+
+  var x1 = Number(center[0]);
+  var y1 = Number(center[1]);
+  var x2 = e.pageX;
+  var y2 = e.pageY;
+  var length = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2))
+  var angle = Math.acos((x2 - x1) / length) * 180 / Math.PI
+
+  if (y2 < y1) {angle = -angle}
+
+  console.log('angle: ', angle)
+  var a = getCirclePoint(center, space, angle);
+  console.log(center, a)
+
+  span.style.left = a[0] + 'px';
+  span.style.top = a[1] + 'px';
+  document.body.appendChild(span)
+})
+</script>
+</html>
