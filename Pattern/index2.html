@@ -1,0 +1,112 @@
+<style type="text/css">
+html {
+  background-color:#eee;
+  height:100%;
+}
+
+body * {
+  box-sizing:border-box;
+}
+
+form {
+  background-color:#fcc;
+  border-radius:.25em;
+  box-shadow:0 0 1em rgba(0,0,0,.25);
+  float:right;
+  font-family:sans-serif;
+  margin:20px;
+  padding:0 1em;
+  text-align:center;
+  width:160px;
+}
+
+label {
+  display:block;
+  margin:1em 0;
+}
+
+input[type=number] {
+  font-size:2em;
+  text-align:right;
+  width:100px;
+}
+
+.circle {
+  background-color:#fff;
+  border-radius:50%;
+  box-shadow:0 0 1em rgba(0,0,0,.25);
+  margin:20px;
+  position:relative;
+}
+
+.poly {
+  border:dashed 1px #fcc;
+  border-bottom:solid 1px #f00;
+  left:50%;
+  position:absolute;
+}	
+</style>
+
+<form action="">
+  <label>Number of Sides
+  <input id="number-of-sides" type="number" step="1" min="3" max="360" value="4" onchange="draw()" />
+  </label>
+  <label>Circle Radius (px)
+  <input id="circle-radius" type="number" step="1" min="50" max="1000" value="200" onchange="draw()" />
+  </label>
+</form>
+<div class="circle"></div>
+
+<script>
+function draw() {
+  
+  // get values from form or use defaults
+  var sides = parseInt(document.getElementById('number-of-sides').value) || 3,
+    radius = parseInt(document.getElementById('circle-radius').value) || 200,
+    circle = document.querySelector('.circle');
+  
+  // empty circle
+  while (circle.firstChild) {
+    circle.removeChild(circle.firstChild);
+  }
+  
+  // set circle size
+  circle.style.height = (radius * 2) + 'px';
+  circle.style.width = (radius * 2) + 'px';
+  
+  //     A         center of circle = A
+  //     |\        radius = AC
+  //     |a\       angle = a
+  //     |  \      opposite = BC
+  //     |___\     sideToCenter = AB
+  //     B    C    edge of circle = C
+
+  var slice = 360 / sides,
+      // trigonometry shizzle
+      angle = slice / 2,
+      radians = angle * (Math.PI / 180),
+      opposite = (Math.sin(radians)) * radius,
+      side = opposite * 2,
+      // good ol' uncle Pythagoras
+      sideToCenter = Math.sqrt((radius * radius) - (opposite * opposite)),
+      // use document fragment for performance
+      frag = document.createDocumentFragment();
+
+  // add side divs
+  for (var i = 0; i < sides; i++) {
+    var poly = document.createElement('div');
+    poly.className = 'poly';
+    poly.style.width = side + 'px';
+    poly.style.bottom = (radius - sideToCenter) + 'px';
+    poly.style.top = (radius - sideToCenter) + 'px';
+    poly.style.transform = 'translateX(-50%) rotate(' + (i * slice) + 'deg)';
+    frag.appendChild(poly);
+  }
+  
+  // ooosh!
+  circle.appendChild(frag);
+
+}
+
+draw();	
+</script>
