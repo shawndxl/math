@@ -33,6 +33,10 @@ var x2 = 300, y2 = 300;
 var distance = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
 ```
 
+* 三角形
+
+* 圆形
+
 * 角度(angle)--->弧度(radian)
 
 ```js
