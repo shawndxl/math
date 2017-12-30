@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<style type="text/css">
+canvas {
+ border: 1px solid gray;
+}
+</style>
+</head>
+<body>
+<canvas></canvas>
+
+</body>
+
+
+<script type="text/javascript">
+
+var canvas = document.querySelector('canvas');
+var base = 200;
+canvas.width = base * 2;
+canvas.height = base * 2;
+var ctx = canvas.getContext('2d');
+
+// 小圆
+ctx.beginPath();
+ctx.strokeStyle = 'gray';
+ctx.arc(base / 2, base / 2, base / 2, 0, 2 * Math.PI);
+ctx.stroke();
+
+// 小圆
+ctx.beginPath();
+ctx.strokeStyle = 'gray';
+ctx.arc(base / 2 + base, base / 2, base / 2, 0, 2 * Math.PI);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.strokeStyle = 'gray';
+ctx.arc(100, base / 2 + base, base / 2, 0, 2 * Math.PI);
+ctx.arc(base / 2 + base, base / 2 + base, base / 2, 0, 2 * Math.PI);
+ctx.stroke();
+
+// 大圆
+ctx.arc(base, base, base, 0, 2 * Math.PI);
+ctx.stroke();
+
+// 另一个被大部分隐藏的大圆
+ctx.arc(0, 0, base, 0, 2 * Math.PI);
+ctx.stroke();
+
+
+ctx.beginPath();
+ctx.moveTo(0, base / 2);
+ctx.lineTo(base * 2, base / 2);
+ctx.closePath();
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(0, base);
+ctx.lineTo(base * 2, base);
+ctx.closePath();
+ctx.stroke();
+
+
+ctx.beginPath();
+ctx.moveTo(base / 2, 0);
+ctx.lineTo(base / 2, base * 2);
+ctx.closePath();
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(base, 0);
+ctx.lineTo(base, base * 2);
+ctx.closePath();
+ctx.stroke();
+
+
+var center = [base, base];
+function getCirclePoint(center, distance, angle) {
+  var radian = angle / 180 * Math.PI;
+
+  var x1 = center[0] + Math.cos(radian) * distance;
+  var y1 = center[1] + Math.sin(radian) * distance;
+
+  return [x1.toFixed(1), y1.toFixed(1)];
+}
+
+function getB(a, c) {
+	 return Math.sqrt(Math.pow(c, 2) - Math.pow(a, 2));
+}
+
+var xPoint = getB(base / 2, base);
+
+ctx.beginPath();
+ctx.moveTo(base / 2, base - xPoint);
+ctx.lineTo(base, base);
+ctx.closePath();
+ctx.strokeStyle = 'red';
+ctx.stroke();
+
+
+ctx.beginPath();
+ctx.moveTo(base - xPoint, base / 2);
+ctx.lineTo(base, base);
+ctx.strokeStyle = 'red';
+ctx.closePath();
+ctx.stroke();
+
+
+
+ctx.beginPath();
+ctx.moveTo(base - xPoint, base / 2);
+ctx.lineTo(base / 2, base - xPoint);
+
+ctx.moveTo(0, 0);
+ctx.lineTo(base, base);
+
+ctx.moveTo(base / 2, base / 2);
+ctx.lineTo(base / 2 + base / 4.5, 0);
+
+
+ctx.strokeStyle = 'red';
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(base - xPoint, base / 2);
+ctx.lineTo(base - xPoint, base);
+ctx.strokeStyle = 'red';
+ctx.stroke();
+
+var cPoint = Math.sqrt(Math.pow(base / 2, 2) * 2) * 2 - base; // 对角线的长
+// alert(cPoint)
+
+// var x1 = base, y1 = base;
+// var x2 = 300, y2 = 300;
+// var distance = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
+
+// var radian = Math.acos((x2 - x1) / distance);
+// var angle = Math.acos((x2 - x1) / distance) * 180 / Math.PI;
+// if (y2 < y1) angle = -angle
+
+
+// x = 从 150 到 0；
+// y from 0 dao 100;
+// now x = 50, qiu y
+
+
+/**
+ * 通过参考点新建一条三阶贝塞尔曲线，通过 http://cubic-bezier.com/ 得到参考点
+ */
+var Bx = 0,
+    By = 0.552284749831,
+    Cx = 0.552284749831,
+    Cy = 1;
+
+
+/**
+ * 按照 0，0，1，1的坐标以及传入的两个参考点来新建一条三阶贝塞尔曲线，根据不同的t值(x值)返回对应的y值 
+ *
+ * @param number Bx 第一个参考点的x值
+ * @param number By 第一个参考点的y值
+ * @param number Cx 第二个参考点的x值
+ * @param number Cy 第二个参考点的y值
+ * @param number t  0-1之内的x值，用以求对应的y值
+ * @return number 对应的y值
+ */
+function getCurveY(Bx, By, Cx, Cy, t) {
+  var curve = new UnitBezier(Bx, By, Cx, Cy);
+  return curve.solve(t);
+}
+
+/**
+* Solver for cubic bezier curve with implicit control points at (0,0) and (1.0, 1.0)
+*/
+function UnitBezier(p1x, p1y, p2x, p2y) {
+    // pre-calculate the polynomial coefficients
+    // First and last control points are implied to be (0,0) and (1.0, 1.0)
+    this.cx = 3.0 * p1x;
+    this.bx = 3.0 * (p2x - p1x) - this.cx;
+    this.ax = 1.0 - this.cx -this.bx;
+
+    this.cy = 3.0 * p1y;
+    this.by = 3.0 * (p2y - p1y) - this.cy;
+    this.ay = 1.0 - this.cy - this.by;
+
+    this.epsilon= 1e-6; // Precision 精度
+
+    this.sampleCurveX = function(t) {
+      return ((this.ax * t + this.bx) * t + this.cx) * t;
+    };
+
+    this.sampleCurveY = function (t) {
+      return ((this.ay * t + this.by) * t + this.cy) * t;
+    };
+    this.sampleCurveDerivativeX = function (t) {
+      return (3.0 * this.ax * t + 2.0 * this.bx) * t + this.cx;
+    };
+
+    this.solveCurveX = function (x, epsilon) {
+      var t0; 
+      var t1;
+      var t2;
+      var x2;
+      var d2;
+      var i;
+
+      // First try a few iterations of Newton's method -- normally very fast.
+      for (t2 = x, i = 0; i < 8; i++) {
+          x2 = this.sampleCurveX(t2) - x;
+          if (Math.abs (x2) < epsilon)
+              return t2;
+          d2 = this.sampleCurveDerivativeX(t2);
+          if (Math.abs(d2) < epsilon)
+              break;
+          t2 = t2 - x2 / d2;
+      }
+
+      // No solution found - use bi-section
+      t0 = 0.0;
+      t1 = 1.0;
+      t2 = x;
+
+      if (t2 < t0) return t0;
+      if (t2 > t1) return t1;
+
+      while (t0 < t1) {
+          x2 = this.sampleCurveX(t2);
+          if (Math.abs(x2 - x) < epsilon)
+              return t2;
+          if (x > x2) t0 = t2;
+          else t1 = t2;
+
+          t2 = (t1 - t0) * .5 + t0;
+      }
+
+      // Give up
+      return t2;
+   };
+   // Find new T as a function of Y along curve X
+   this.solve = function(x, epsilon) {
+    return this.sampleCurveY( this.solveCurveX(x, epsilon || this.epsilon) );
+   }
+}
+
+</script>
+</html>
