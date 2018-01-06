@@ -32,14 +32,14 @@ var a = (n) => {
 var x = 1;
 var y = 1;
 
-var c = (n, x, y) => {
+var c = (n) => {
     if (n <= 1) return y;
     var temp = y;
     console.log(temp, y, x)
     y = x + y;
     x = temp;
     console.log(temp, y, x)
-    return c(n - 1, y, x + y);
+    return c(n - 1);
 }
 
 
